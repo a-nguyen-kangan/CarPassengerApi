@@ -14,7 +14,7 @@ app.MapGet("/carspassengers", () => getCarsWithPassengers());
 app.MapGet("cars/", () => GetAllCars());
 
 //*** Stuff to practice ***
-// 1. Create an endpoint that returns all cars (whether they have passengers or not)
+// 1. Create an endpoint that returns all cars with their passengers (whether they have passengers or not)
 // 2. Search for a car by rego
 // 3. Search for a person by name (partial name search)
 
