@@ -1,8 +1,22 @@
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.Net.Http.Headers;
 using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173")
+                .AllowAnyHeader();
+        });
+});
+
 var app = builder.Build();
+
+app.UseCors();
 
 Person p1 = new Person();
 Person p2 = new Person(1, "John", 20);
@@ -20,6 +34,7 @@ app.MapGet("cars/", () => GetAllCars());
 
 // Post endpoints
 app.MapPost("/cars", (Car newCar) => InsertNewCar(newCar));
+app.MapPost("/findCarByRego", (Car findCar) => FindCarByRego(findCar));
 
 //*** Stuff to practice ***
 // 1. Create an endpoint that allows you to add a new person
@@ -29,9 +44,17 @@ app.MapPost("/cars", (Car newCar) => InsertNewCar(newCar));
 // 5. Create an endpoint that allows you to remove a driver from a car
 // 6. Create endpoints to remove cars and people by rego and id respectively
 
+
+
+
+
+
+app.Run();
+
 // Inserts new car into database, if successful return the car
 string InsertNewCar(Car newCar)
 {
+    Console.WriteLine("POST: " + newCar);
     // connect to the database
         using (var conn = getDbConnection()) {
             try {
@@ -58,11 +81,6 @@ string InsertNewCar(Car newCar)
 
     return newCar.Rego;
 }
-
-app.MapPost("/findCarByRego", (Car findCar) => FindCarByRego(findCar));
-
-
-app.Run();
 
 Car FindCarByRego(Car findCar) {
     return GetAllCars().Find(car => car.Rego == findCar.Rego);
