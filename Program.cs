@@ -23,6 +23,7 @@ app.UseCors();
 Person p1 = new Person();
 Person p2 = new Person(1, "John", 20);
 
+app.MapGet("/hello", () => "Hello World!");
 app.MapGet("/", () => p2);
 app.MapGet("/people", () => getPeople());
 app.MapGet("/people/{id}", (int id) => getPersonById(id));
