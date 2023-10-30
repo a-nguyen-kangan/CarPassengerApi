@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using Npgsql;
 
@@ -25,7 +27,7 @@ app.MapGet("/", () => p2);
 app.MapGet("/people", () => getPeople());
 app.MapGet("/people/{id}", (int id) => getPersonById(id));
 app.MapGet("/carspassengers", () => getCarsWithPassengers());
-app.MapGet("cars/", () => GetAllCars());
+app.MapGet("/cars", () => GetAllCars());
 
 //*** Stuff to practice ***
 // 1. Create an endpoint that returns all cars with their passengers (whether they have passengers or not)
@@ -33,8 +35,8 @@ app.MapGet("cars/", () => GetAllCars());
 // 3. Search for a person by name (partial name search)
 
 // Post endpoints
-app.MapPost("/cars", (Car newCar) => InsertNewCar(newCar));
-app.MapPost("/findCarByRego", (Car findCar) => FindCarByRego(findCar));
+app.MapPost("/cars", (Car newCar) => PostNewCar(newCar));
+// app.MapPost("/findCarByRego", (Car findCar) => FindCarByRego(findCar));
 
 //*** Stuff to practice ***
 // 1. Create an endpoint that allows you to add a new person
@@ -44,12 +46,18 @@ app.MapPost("/findCarByRego", (Car findCar) => FindCarByRego(findCar));
 // 5. Create an endpoint that allows you to remove a driver from a car
 // 6. Create endpoints to remove cars and people by rego and id respectively
 
-
-
-
-
-
 app.Run();
+
+Results<Ok<List<Car>>, NoContent> GetAllCars() {
+    var cars = FetchAllCars();
+    return cars.Count > 0 ? TypedResults.Ok(cars) : TypedResults.NoContent();
+}
+
+Results<Ok<string>, BadRequest<string>> PostNewCar(Car newCar) {
+    var result = InsertNewCar(newCar);
+    return result != newCar.Rego ? TypedResults.BadRequest(result) : TypedResults.Ok(result);
+}
+
 
 // Inserts new car into database, if successful return the car
 string InsertNewCar(Car newCar)
@@ -82,11 +90,11 @@ string InsertNewCar(Car newCar)
     return newCar.Rego;
 }
 
-Car FindCarByRego(Car findCar) {
-    return GetAllCars().Find(car => car.Rego == findCar.Rego);
+Car? FindCarByRego(string rego) {
+    return FetchAllCars().Find(car => car.Rego == rego);
 }
 
-Person getPersonById(int id) {
+Person? getPersonById(int id) {
     return getPeople().Find(person => person.Id == id);
 }
 
@@ -110,7 +118,7 @@ List<Person> getPeople() {
 
 }
 
-List<Car> GetAllCars() {
+List<Car> FetchAllCars() {
     List<Car> cars = new List<Car>();
     using (var conn = getDbConnection()) {
         try {
@@ -125,6 +133,7 @@ List<Car> GetAllCars() {
             }
         } catch (Exception e) {
             Console.WriteLine(e.Message);
+            Results.NotFound("No cars found");
         }
     }
 
