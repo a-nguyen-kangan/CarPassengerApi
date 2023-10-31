@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "EFUh1EO94HAwsFWy/nEuSTMB+Hy74oPgAYoJBBpDZxUni2NaN92LFw7TK9wl58j8IQyV3iHca4C2hscSuHynPA==",
+  "success": true,
+  "projectFilePath": "/Users/anguyen/Project/CarPassengerApi/CarPassengerApi.csproj",
+  "expectedPackageFiles": [
+    "/Users/anguyen/.nuget/packages/microsoft.extensions.logging.abstractions/6.0.0/microsoft.extensions.logging.abstractions.6.0.0.nupkg.sha512",
+    "/Users/anguyen/.nuget/packages/npgsql/7.0.6/npgsql.7.0.6.nupkg.sha512"
+  ],
+  "logs": []
+}

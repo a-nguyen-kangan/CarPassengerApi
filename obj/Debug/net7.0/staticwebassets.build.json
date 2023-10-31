@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "eei/YLp6JWqtesAuDL6kxP2R5xlZfNjW+6CrV2nhsNs=",
+  "Source": "CarPassengerApi",
+  "BasePath": "_content/CarPassengerApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
